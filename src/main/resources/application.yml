@@ -1,0 +1,37 @@
+spring:
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: randomislerucun123@gmail.com
+    password: ptpwfuvnswkkbrla
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+  jpa:
+    database: POSTGRESQL
+    hibernate:
+      ddl-auto: update
+      show-sql: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQLDialect
+  datasource:
+    url: jdbc:postgresql://localhost:5432/goizzdb
+    username: postgres
+    password: 12345
+    driver-class-name: org.postgresql.Driver
+  properties:
+    javax:
+      persistence:
+        validation:
+          mode: none
+
+
+huseynsharif:
+  goizz:
+    frontend:
+      host: localhost
+      port: 300
