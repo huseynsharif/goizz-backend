@@ -17,19 +17,27 @@ import java.util.Map;
 @RestController
 @RequestMapping("/api/users")
 @RequiredArgsConstructor
+@CrossOrigin
 public class UserController {
 
     private final UserService userService;
 
     @PostMapping("/signup")
-    public ResponseEntity<?> signUp(SignUpRequestDTO signUpRequestDTO){
+    public ResponseEntity<?> signUp(@RequestBody SignUpRequestDTO signUpRequestDTO){
         return ResponseEntity.ok(this.userService.signUp(signUpRequestDTO));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<?> logIn(LoginRequestDTO loginRequestDTO){
+    public ResponseEntity<?> logIn(@RequestBody LoginRequestDTO loginRequestDTO){
         return ResponseEntity.ok(this.userService.logIn(loginRequestDTO));
     }
+
+    @PostMapping("/verify-email-with-link")
+    public ResponseEntity<?> logIn(@RequestParam("userId") int userId, @RequestParam("token") String token){
+        return ResponseEntity.ok(this.userService.verifyEmailWithLink(userId, token));
+    }
+
+
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)

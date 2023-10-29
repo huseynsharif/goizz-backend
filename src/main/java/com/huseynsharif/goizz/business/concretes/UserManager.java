@@ -14,6 +14,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 @Service
@@ -69,8 +70,7 @@ public class UserManager implements UserService {
 
     private String verificationLinkGenerator(int userId, String token) {
 
-        // TODO: frontu yazandan sonra qayıt bura
-        return "http://localhost:3000/verificate-user-with-link/" + userId + "/" + token;
+        return "http://localhost:3000/verify-email-with-link/" + userId + "/" + token;
     }
 
     @Override
@@ -90,5 +90,33 @@ public class UserManager implements UserService {
 
         return new SuccessDataResult<>(response, "User successfully finded.");
 
+    }
+
+    @Override
+    public Result verifyEmailWithLink(int userId, String token) {
+
+        Verification emailVerification = this.verificationDAO.findVerificationByUser_Id(userId);
+
+        if (emailVerification == null) {
+            return new ErrorResult("Cannot find verification with given userId: " + userId);
+        }
+
+        if (!Objects.equals(emailVerification.getToken(), token)) {
+            return new ErrorResult("Token is incorrect: " + token);
+        }
+
+        if (emailVerification.getCreatedAt().plusMinutes(30).isBefore(LocalDateTime.now())) {
+            return new ErrorResult("Token is expired.");
+        }
+
+        User user = this.userDAO.findById(userId).orElse(null);
+        if (user == null) {
+            return new ErrorResult("Cannot find user with given userId: "+userId);
+        }
+
+        user.setVerified(true);
+        this.userDAO.save(user);
+        this.verificationDAO.delete(emailVerification);
+        return new SuccessResult("Successfully verificated.");
     }
 }
