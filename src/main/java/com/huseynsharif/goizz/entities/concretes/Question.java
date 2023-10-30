@@ -17,11 +17,16 @@ public class Question {
     @Column(name = "question_id")
     private int id;
 
-    @Column(name = "question_text",
+    @Column(name = "title",
             nullable = false)
-    private String questionText;
+    private String title;
 
     @ManyToOne
     @JoinColumn(name = "quiz_id")
     private Quiz quizId;
+
+    public Question(String title, Quiz quizId) {
+        this.title = title;
+        this.quizId = quizId;
+    }
 }

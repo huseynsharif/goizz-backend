@@ -5,6 +5,7 @@ import com.huseynsharif.goizz.entities.concretes.dtos.CreateQuizDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -16,7 +17,7 @@ public class QuizController {
     private final QuizService quizService;
 
     @PostMapping("/add-new-quiz")
-    public ResponseEntity<?> addNewQuiz(CreateQuizDTO createQuizDTO){
+    public ResponseEntity<?> addNewQuiz(@RequestBody CreateQuizDTO createQuizDTO){
         return ResponseEntity.ok(this.quizService.addNewQuiz(createQuizDTO));
     }
 
