@@ -8,6 +8,7 @@ import com.huseynsharif.goizz.dataAccess.abstracts.VerificationDAO;
 import com.huseynsharif.goizz.entities.concretes.User;
 import com.huseynsharif.goizz.entities.concretes.Verification;
 import com.huseynsharif.goizz.entities.concretes.dtos.LoginRequestDTO;
+import com.huseynsharif.goizz.entities.concretes.dtos.RestorePasswordRequestDTO;
 import com.huseynsharif.goizz.entities.concretes.dtos.SignUpRequestDTO;
 import com.huseynsharif.goizz.entities.concretes.dtos.UserLoginResponseDTO;
 import lombok.RequiredArgsConstructor;
@@ -118,5 +119,60 @@ public class UserManager implements UserService {
         this.userDAO.save(user);
         this.verificationDAO.delete(emailVerification);
         return new SuccessResult("Successfully verificated.");
+    }
+
+    @Override
+    public Result sendForgotPasswordEmail(String email) {
+
+        User user = this.userDAO.findUserByEmail(email);
+        if (user == null) {
+            return new ErrorResult("Cannot find user with given email: " + email);
+        }
+
+        Verification verification = new Verification(user);
+        this.verificationDAO.save(verification);
+        this.emailService.sendForgotPasswordEmailHtml(
+                user.getUsername(),
+                user.getEmail(),
+                restorePasswordLinkGenerator(user.getId(),
+                        verification.getToken()
+                ));
+        return new SuccessDataResult<>("Email was successfully sent.");
+    }
+
+    private String restorePasswordLinkGenerator(int userId, String token) {
+        return "http://localhost:3000/new-password/" + userId + "/" + token;
+    }
+
+    @Override
+    public Result restorePassword(RestorePasswordRequestDTO restoreRequest) {
+
+        User user = this.userDAO.findById(restoreRequest.getUserId()).orElse(null);
+
+        if (user == null) {
+            return new ErrorDataResult<>("Cannot find user by given id: " + restoreRequest.getUserId());
+        }
+
+        Verification emailVerification = this.verificationDAO.findVerificationByUser_Id(restoreRequest.getUserId());
+
+        if (emailVerification == null) {
+            return new ErrorDataResult<>("Cannot find token with userId: " + restoreRequest.getUserId());
+        }
+
+        if (!Objects.equals(emailVerification.getToken(), restoreRequest.getToken())) {
+            return new ErrorDataResult<>("Token is incorrect: " + restoreRequest.getToken());
+        }
+
+        if (emailVerification.getCreatedAt().plusMinutes(3).isBefore(LocalDateTime.now())) {
+            return new ErrorDataResult<>("Token is expired.");
+        }
+
+        if (!Objects.equals(restoreRequest.getPassword(), restoreRequest.getCpassword())) {
+            return new ErrorDataResult<>("Password must be same.");
+        }
+
+        user.setPassword(restoreRequest.getPassword());
+        this.userDAO.save(user);
+        return new SuccessDataResult<>("Password was successfully restored.");
     }
 }

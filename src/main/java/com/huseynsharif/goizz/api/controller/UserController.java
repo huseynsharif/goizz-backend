@@ -3,6 +3,7 @@ package com.huseynsharif.goizz.api.controller;
 import com.huseynsharif.goizz.business.abstracts.UserService;
 import com.huseynsharif.goizz.core.utilities.results.ErrorDataResult;
 import com.huseynsharif.goizz.entities.concretes.dtos.LoginRequestDTO;
+import com.huseynsharif.goizz.entities.concretes.dtos.RestorePasswordRequestDTO;
 import com.huseynsharif.goizz.entities.concretes.dtos.SignUpRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
@@ -37,7 +38,19 @@ public class UserController {
         return ResponseEntity.ok(this.userService.verifyEmailWithLink(userId, token));
     }
 
+    @PostMapping("/send-forgot-password-email")
+    public ResponseEntity<?> forgotPasswordVerification(@RequestParam("email") String email){
 
+        return ResponseEntity.ok(this.userService.sendForgotPasswordEmail(email));
+
+    }
+
+    @PostMapping("/restore-password")
+    public ResponseEntity<?> restorePassword(@RequestBody RestorePasswordRequestDTO restoreRequest){
+
+        return ResponseEntity.ok(this.userService.restorePassword(restoreRequest));
+
+    }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
