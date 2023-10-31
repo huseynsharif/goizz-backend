@@ -23,4 +23,9 @@ public class CorrectAnswer {
     @ManyToOne
     @JoinColumn(name = "answer_to", referencedColumnName = "question_id")
     private Question answerTo;
+
+    public CorrectAnswer(String answer, Question answerTo) {
+        this.answer = answer;
+        this.answerTo = answerTo;
+    }
 }

@@ -6,6 +6,7 @@ import com.huseynsharif.goizz.core.utilities.results.Result;
 import com.huseynsharif.goizz.dataAccess.abstracts.CorrectAnswerDAO;
 import com.huseynsharif.goizz.dataAccess.abstracts.QuestionDAO;
 import com.huseynsharif.goizz.dataAccess.abstracts.QuizDAO;
+import com.huseynsharif.goizz.entities.concretes.CorrectAnswer;
 import com.huseynsharif.goizz.entities.concretes.Question;
 import com.huseynsharif.goizz.entities.concretes.Quiz;
 import com.huseynsharif.goizz.entities.concretes.dtos.CreateQuestionDTO;
@@ -34,9 +35,16 @@ public class QuestionManager implements QuestionService {
                 createQuestionDTO.getTitle(),
                 quiz
         );
+        this.questionDAO.save(question);
 
-        // TODO: correct answers
+        for (String answer : createQuestionDTO.getCorrectAnswers()) {
+            CorrectAnswer correctAnswer = new CorrectAnswer(
+                answer, question
+            );
+            this.correctAnswerDAO.save(correctAnswer);
+        }
 
-        return null;
+
+        return new ErrorResult("Successfully saved");
     }
 }
