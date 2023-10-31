@@ -1,4 +1,4 @@
-package com.huseynsharif.goizz.entities.concretes.dtos;
+package com.huseynsharif.goizz.entities.concretes.dtos.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;

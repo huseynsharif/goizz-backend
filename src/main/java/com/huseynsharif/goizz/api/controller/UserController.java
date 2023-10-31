@@ -2,9 +2,9 @@ package com.huseynsharif.goizz.api.controller;
 
 import com.huseynsharif.goizz.business.abstracts.UserService;
 import com.huseynsharif.goizz.core.utilities.results.ErrorDataResult;
-import com.huseynsharif.goizz.entities.concretes.dtos.LoginRequestDTO;
-import com.huseynsharif.goizz.entities.concretes.dtos.RestorePasswordRequestDTO;
-import com.huseynsharif.goizz.entities.concretes.dtos.SignUpRequestDTO;
+import com.huseynsharif.goizz.entities.concretes.dtos.request.LoginRequestDTO;
+import com.huseynsharif.goizz.entities.concretes.dtos.request.RestorePasswordRequestDTO;
+import com.huseynsharif.goizz.entities.concretes.dtos.request.SignUpRequestDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

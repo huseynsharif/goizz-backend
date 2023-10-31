@@ -9,7 +9,7 @@ import com.huseynsharif.goizz.dataAccess.abstracts.QuizDAO;
 import com.huseynsharif.goizz.entities.concretes.CorrectAnswer;
 import com.huseynsharif.goizz.entities.concretes.Question;
 import com.huseynsharif.goizz.entities.concretes.Quiz;
-import com.huseynsharif.goizz.entities.concretes.dtos.CreateQuestionDTO;
+import com.huseynsharif.goizz.entities.concretes.dtos.request.CreateQuestionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 

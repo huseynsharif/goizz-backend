@@ -1,4 +1,4 @@
-package com.huseynsharif.goizz.entities.concretes.dtos;
+package com.huseynsharif.goizz.entities.concretes.dtos.request;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;

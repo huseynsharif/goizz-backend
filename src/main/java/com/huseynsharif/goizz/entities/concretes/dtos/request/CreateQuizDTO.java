@@ -1,4 +1,4 @@
-package com.huseynsharif.goizz.entities.concretes.dtos;
+package com.huseynsharif.goizz.entities.concretes.dtos.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -14,6 +14,11 @@ public class CreateQuizDTO {
     @NotNull
     @NotBlank
     private String title;
+
+    @NotNull
+    @NotBlank
+    private String description;
+
 
     @NotNull
     @NotBlank
