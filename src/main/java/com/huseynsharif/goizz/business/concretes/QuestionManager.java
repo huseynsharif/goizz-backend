@@ -1,8 +1,7 @@
 package com.huseynsharif.goizz.business.concretes;
 
 import com.huseynsharif.goizz.business.abstracts.QuestionService;
-import com.huseynsharif.goizz.core.utilities.results.ErrorResult;
-import com.huseynsharif.goizz.core.utilities.results.Result;
+import com.huseynsharif.goizz.core.utilities.results.*;
 import com.huseynsharif.goizz.dataAccess.abstracts.CorrectAnswerDAO;
 import com.huseynsharif.goizz.dataAccess.abstracts.QuestionDAO;
 import com.huseynsharif.goizz.dataAccess.abstracts.QuizDAO;
@@ -12,6 +11,8 @@ import com.huseynsharif.goizz.entities.concretes.Quiz;
 import com.huseynsharif.goizz.entities.concretes.dtos.request.CreateQuestionDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 @Service
 
@@ -46,5 +47,17 @@ public class QuestionManager implements QuestionService {
 
 
         return new ErrorResult("Successfully saved");
+    }
+
+    @Override
+    public DataResult<List<Question>> getAllByQuiz_Id(int quizId) {
+
+        List<Question> questions = this.questionDAO.getAllByQuiz_Id(quizId);
+        if (questions.isEmpty()){
+            return new ErrorDataResult<>("Cannot find question with given id: " + quizId);
+        }
+
+
+        return new SuccessDataResult<>(questions, "Successfully listed.");
     }
 }

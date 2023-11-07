@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("api/quizzes")
 @RequiredArgsConstructor
+@CrossOrigin
 public class QuizController {
 
     private final QuizService quizService;
@@ -18,7 +19,7 @@ public class QuizController {
         return ResponseEntity.ok(this.quizService.addNewQuiz(createQuizDTO));
     }
 
-    @PostMapping("/getall-by-userId")
+    @GetMapping("/getall-by-userId")
     public ResponseEntity<?> getAll(@RequestParam int userId){
         return ResponseEntity.ok(this.quizService.getAllByUserId(userId));
     }

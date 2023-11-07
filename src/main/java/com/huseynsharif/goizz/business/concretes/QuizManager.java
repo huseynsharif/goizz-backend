@@ -25,7 +25,6 @@ public class QuizManager implements QuizService {
 
     @Override
     public Result addNewQuiz(CreateQuizDTO createQuizDTO) {
-
         User user = this.userDAO.findById(createQuizDTO.getUserId()).orElse(null);
         if (user == null) {
             return new ErrorResult("Cannot find user with given id: " + createQuizDTO.getUserId());
@@ -33,6 +32,7 @@ public class QuizManager implements QuizService {
 
         Quiz quiz = new Quiz(
                 createQuizDTO.getTitle(),
+                createQuizDTO.getDescription(),
                 user
         );
         this.quizDAO.save(quiz);
@@ -52,13 +52,12 @@ public class QuizManager implements QuizService {
                 .stream()
                 .map(
                         (quiz)-> new QuizResponseDTO(
+                                    quiz.getId(),
                                     quiz.getTitle(),
                                     quiz.getDescription(),
                                     quiz.getCreatedAt().format(formatter)
-                            )
+                                )
                 ).toList();
-
-        // TODO: quiz yaratmagi test et, datetimeformatter test et
-        return null;
+        return new SuccessDataResult<>(response, "All quizzes for: " + userId);
     }
 }

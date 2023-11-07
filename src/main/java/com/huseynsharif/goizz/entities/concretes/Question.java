@@ -23,10 +23,10 @@ public class Question {
 
     @ManyToOne
     @JoinColumn(name = "quiz_id")
-    private Quiz quizId;
+    private Quiz quiz;
 
-    public Question(String title, Quiz quizId) {
+    public Question(String title, Quiz quiz) {
         this.title = title;
-        this.quizId = quizId;
+        this.quiz = quiz;
     }
 }

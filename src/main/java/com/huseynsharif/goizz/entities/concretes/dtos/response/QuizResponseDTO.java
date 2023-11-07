@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class QuizResponseDTO {
 
+    private int id;
     private String title;
     private String description;
     private String creationDate;

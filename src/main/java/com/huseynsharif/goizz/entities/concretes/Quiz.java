@@ -40,8 +40,9 @@ public class Quiz {
             nullable = false)
     private LocalDateTime createdAt;
 
-    public Quiz(String title, User createdBy) {
+    public Quiz(String title, String description, User createdBy) {
         this.title = title;
+        this.description = description;
         this.createdBy = createdBy;
     }
 }
