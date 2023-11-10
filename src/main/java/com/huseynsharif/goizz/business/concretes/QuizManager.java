@@ -36,7 +36,7 @@ public class QuizManager implements QuizService {
                 user
         );
         this.quizDAO.save(quiz);
-        return new SuccessResult("Quiz was saved successfully");
+        return new SuccessDataResult<Integer>(quiz.getId(),"Quiz was saved successfully");
     }
 
     @Override

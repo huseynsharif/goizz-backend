@@ -12,7 +12,7 @@ import java.util.List;
 public class CreateQuestionDTO {
 
     private String title;
-    private List<String> correctAnswers;
+    private String correctAnswers;
     private int quizId;
 
 }

@@ -26,6 +26,11 @@ public class QuestionManager implements QuestionService {
     @Override
     public Result add(CreateQuestionDTO createQuestionDTO) {
 
+//        if (createQuestionDTO != null) {
+//            System.out.println(createQuestionDTO);
+//            return null;
+//        }
+
         Quiz quiz = this.quizDAO.findById(createQuestionDTO.getQuizId()).orElse(null);
 
         if (quiz==null){
@@ -38,15 +43,18 @@ public class QuestionManager implements QuestionService {
         );
         this.questionDAO.save(question);
 
-        for (String answer : createQuestionDTO.getCorrectAnswers()) {
-            CorrectAnswer correctAnswer = new CorrectAnswer(
-                answer, question
-            );
-            this.correctAnswerDAO.save(correctAnswer);
-        }
+//        for (String answer : createQuestionDTO.getCorrectAnswers()) {
+//            CorrectAnswer correctAnswer = new CorrectAnswer(
+//                answer, question
+//            );
+//            this.correctAnswerDAO.save(correctAnswer);
+//        }
+
+        // correct answer 1den cox et
+        this.correctAnswerDAO.save(new CorrectAnswer(createQuestionDTO.getCorrectAnswers(), question));
 
 
-        return new ErrorResult("Successfully saved");
+        return new SuccessResult("Successfully saved");
     }
 
     @Override
