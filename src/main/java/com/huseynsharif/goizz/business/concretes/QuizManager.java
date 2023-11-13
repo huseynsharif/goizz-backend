@@ -22,6 +22,7 @@ public class QuizManager implements QuizService {
     private final QuizDAO quizDAO;
     private final UserDAO userDAO;
 
+    private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
 
     @Override
     public Result addNewQuiz(CreateQuizDTO createQuizDTO) {
@@ -46,7 +47,6 @@ public class QuizManager implements QuizService {
         if (quizzes.isEmpty()) {
             return new ErrorDataResult<>("Cannot find quiz");
         }
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
 
         List<QuizResponseDTO> response = quizzes
                 .stream()
@@ -59,5 +59,23 @@ public class QuizManager implements QuizService {
                                 )
                 ).toList();
         return new SuccessDataResult<>(response, "All quizzes for: " + userId);
+    }
+
+    @Override
+    public DataResult<QuizResponseDTO> getById(int id) {
+
+        Quiz quiz = this.quizDAO.findById(id).orElse(null);
+        if (quiz == null) {
+            return new ErrorDataResult<>("Cannot find quiz with given quizId: " + id);
+        }
+
+        QuizResponseDTO response = new QuizResponseDTO(
+                quiz.getId(),
+                quiz.getTitle(),
+                quiz.getDescription(),
+                quiz.getCreatedAt().format(formatter)
+        );
+
+        return new SuccessDataResult<>(response, "Successfully found.");
     }
 }

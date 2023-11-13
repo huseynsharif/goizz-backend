@@ -13,4 +13,6 @@ public interface QuizService {
 
     DataResult<List<QuizResponseDTO>> getAllByUserId(int userId);
 
+    DataResult<QuizResponseDTO> getById(int id);
+
 }

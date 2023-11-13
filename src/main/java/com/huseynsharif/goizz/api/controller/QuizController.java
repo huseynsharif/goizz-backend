@@ -24,4 +24,9 @@ public class QuizController {
         return ResponseEntity.ok(this.quizService.getAllByUserId(userId));
     }
 
+    @GetMapping("/get-by-id")
+    public ResponseEntity<?> getById(@RequestParam int quizId){
+        return ResponseEntity.ok(this.quizService.getById(quizId));
+    }
+
 }

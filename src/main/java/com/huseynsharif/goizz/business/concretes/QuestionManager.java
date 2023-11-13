@@ -26,11 +26,6 @@ public class QuestionManager implements QuestionService {
     @Override
     public Result add(CreateQuestionDTO createQuestionDTO) {
 
-//        if (createQuestionDTO != null) {
-//            System.out.println(createQuestionDTO);
-//            return null;
-//        }
-
         Quiz quiz = this.quizDAO.findById(createQuestionDTO.getQuizId()).orElse(null);
 
         if (quiz==null){
