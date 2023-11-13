@@ -2,11 +2,17 @@ package com.huseynsharif.goizz.business.concretes;
 
 import com.huseynsharif.goizz.business.abstracts.QuizService;
 import com.huseynsharif.goizz.core.utilities.results.*;
+import com.huseynsharif.goizz.dataAccess.abstracts.CorrectAnswerDAO;
+import com.huseynsharif.goizz.dataAccess.abstracts.QuestionDAO;
 import com.huseynsharif.goizz.dataAccess.abstracts.QuizDAO;
 import com.huseynsharif.goizz.dataAccess.abstracts.UserDAO;
+import com.huseynsharif.goizz.entities.concretes.Question;
 import com.huseynsharif.goizz.entities.concretes.Quiz;
 import com.huseynsharif.goizz.entities.concretes.User;
 import com.huseynsharif.goizz.entities.concretes.dtos.request.CreateQuizDTO;
+import com.huseynsharif.goizz.entities.concretes.dtos.response.QuestionAnswerDTO;
+import com.huseynsharif.goizz.entities.concretes.dtos.response.QuestionDTO;
+import com.huseynsharif.goizz.entities.concretes.dtos.response.QuizQuestionDTO;
 import com.huseynsharif.goizz.entities.concretes.dtos.response.QuizResponseDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -21,6 +27,8 @@ public class QuizManager implements QuizService {
 
     private final QuizDAO quizDAO;
     private final UserDAO userDAO;
+    private final QuestionDAO questionDAO;
+    private final CorrectAnswerDAO correctAnswerDAO;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
 
@@ -62,19 +70,32 @@ public class QuizManager implements QuizService {
     }
 
     @Override
-    public DataResult<QuizResponseDTO> getById(int id) {
+    public DataResult<QuizQuestionDTO> getById(int id) {
 
         Quiz quiz = this.quizDAO.findById(id).orElse(null);
         if (quiz == null) {
             return new ErrorDataResult<>("Cannot find quiz with given quizId: " + id);
         }
 
-        QuizResponseDTO response = new QuizResponseDTO(
+        List<Question> questions = this.questionDAO.getAllByQuiz_Id(id);
+        if (questions.isEmpty()){
+            return new ErrorDataResult<>("Cannot find question with given id: " + id);
+        }
+
+        List<QuestionAnswerDTO> questionAnswerDTOS = questions.stream().map(
+                (question)-> new QuestionAnswerDTO(
+                        new QuestionDTO(question.getId(), question.getTitle()),
+                        this.correctAnswerDAO.findCorrectAnswerByAnswerTo_Id(question.getId()).getAnswer())
+        ).toList();
+
+        QuizResponseDTO quizResponseDTO = new QuizResponseDTO(
                 quiz.getId(),
                 quiz.getTitle(),
                 quiz.getDescription(),
                 quiz.getCreatedAt().format(formatter)
         );
+
+        QuizQuestionDTO response = new QuizQuestionDTO(quizResponseDTO, questionAnswerDTOS);
 
         return new SuccessDataResult<>(response, "Successfully found.");
     }

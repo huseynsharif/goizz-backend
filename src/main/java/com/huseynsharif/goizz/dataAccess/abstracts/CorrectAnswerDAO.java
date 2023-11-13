@@ -5,6 +5,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface CorrectAnswerDAO extends JpaRepository<CorrectAnswer, Integer> {
 
-
+    CorrectAnswer findCorrectAnswerByAnswerTo_Id(int questionId);
 
 }
