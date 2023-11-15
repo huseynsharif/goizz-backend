@@ -4,6 +4,8 @@ import com.huseynsharif.goizz.business.abstracts.QuizService;
 import com.huseynsharif.goizz.entities.concretes.dtos.request.CreateQuizDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.handler.annotation.MessageMapping;
+import org.springframework.messaging.handler.annotation.Payload;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
@@ -28,5 +30,14 @@ public class QuizController {
     public ResponseEntity<?> getById(@RequestParam("quizId") int quizId){
         return ResponseEntity.ok(this.quizService.getById(quizId));
     }
+
+    @MessageMapping("/rt-quiz")
+    public int sendQuestion(@Payload int questionId){
+
+        this.quizService.sendQuestion(questionId);
+
+        return questionId;
+    }
+
 
 }

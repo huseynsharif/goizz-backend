@@ -16,4 +16,6 @@ public interface QuizService {
 
     DataResult<QuizQuestionDTO> getById(int id);
 
+    Result sendQuestion(int questionId);
+
 }

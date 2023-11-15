@@ -15,6 +15,7 @@ import com.huseynsharif.goizz.entities.concretes.dtos.response.QuestionDTO;
 import com.huseynsharif.goizz.entities.concretes.dtos.response.QuizQuestionDTO;
 import com.huseynsharif.goizz.entities.concretes.dtos.response.QuizResponseDTO;
 import lombok.RequiredArgsConstructor;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.stereotype.Service;
 
 import java.time.format.DateTimeFormatter;
@@ -29,6 +30,8 @@ public class QuizManager implements QuizService {
     private final UserDAO userDAO;
     private final QuestionDAO questionDAO;
     private final CorrectAnswerDAO correctAnswerDAO;
+
+    private final SimpMessagingTemplate simpMessagingTemplate;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
 
@@ -98,5 +101,18 @@ public class QuizManager implements QuizService {
         QuizQuestionDTO response = new QuizQuestionDTO(quizResponseDTO, questionAnswerDTOS);
 
         return new SuccessDataResult<>(response, "Successfully found.");
+    }
+
+    @Override
+    public Result sendQuestion(int questionId) {
+
+        Question question = this.questionDAO.findById(questionId).orElse(null);
+
+        if (question == null) {
+            return new ErrorResult("Cannot find question with given questionId: " + questionId);
+        }
+
+        simpMessagingTemplate.convertAndSend("/topic/rt-quiz-client/" + question.getQuiz().getId(), question.getTitle());
+        return new SuccessResult("Successfully sent.");
     }
 }
