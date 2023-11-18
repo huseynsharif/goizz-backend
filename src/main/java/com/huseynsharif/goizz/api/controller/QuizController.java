@@ -2,6 +2,7 @@ package com.huseynsharif.goizz.api.controller;
 
 import com.huseynsharif.goizz.business.abstracts.QuizService;
 import com.huseynsharif.goizz.entities.concretes.dtos.request.CreateQuizDTO;
+import com.huseynsharif.goizz.entities.concretes.dtos.request.UserAnswerDTO;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.messaging.handler.annotation.MessageMapping;
@@ -35,9 +36,12 @@ public class QuizController {
     public int sendQuestion(@Payload int questionId){
 
         this.quizService.sendQuestion(questionId);
-
         return questionId;
     }
 
+    @PostMapping("/receive-answer")
+    public ResponseEntity<?> receiveAnswer(@RequestBody UserAnswerDTO userAnswerDTO){
+        return ResponseEntity.ok(this.quizService.receiveAnswer(userAnswerDTO));
+    }
 
 }

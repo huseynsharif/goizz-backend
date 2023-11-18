@@ -6,10 +6,12 @@ import com.huseynsharif.goizz.dataAccess.abstracts.CorrectAnswerDAO;
 import com.huseynsharif.goizz.dataAccess.abstracts.QuestionDAO;
 import com.huseynsharif.goizz.dataAccess.abstracts.QuizDAO;
 import com.huseynsharif.goizz.dataAccess.abstracts.UserDAO;
+import com.huseynsharif.goizz.entities.concretes.CorrectAnswer;
 import com.huseynsharif.goizz.entities.concretes.Question;
 import com.huseynsharif.goizz.entities.concretes.Quiz;
 import com.huseynsharif.goizz.entities.concretes.User;
 import com.huseynsharif.goizz.entities.concretes.dtos.request.CreateQuizDTO;
+import com.huseynsharif.goizz.entities.concretes.dtos.request.UserAnswerDTO;
 import com.huseynsharif.goizz.entities.concretes.dtos.response.QuestionAnswerDTO;
 import com.huseynsharif.goizz.entities.concretes.dtos.response.QuestionDTO;
 import com.huseynsharif.goizz.entities.concretes.dtos.response.QuizQuestionDTO;
@@ -34,7 +36,7 @@ public class QuizManager implements QuizService {
     private final SimpMessagingTemplate simpMessagingTemplate;
 
     private DateTimeFormatter formatter = DateTimeFormatter.ofPattern("MMMM dd, yyyy");
-
+                           
     @Override
     public Result addNewQuiz(CreateQuizDTO createQuizDTO) {
         User user = this.userDAO.findById(createQuizDTO.getUserId()).orElse(null);
@@ -54,9 +56,9 @@ public class QuizManager implements QuizService {
     @Override
     public DataResult<List<QuizResponseDTO>> getAllByUserId(int userId) {
 
-        List<Quiz> quizzes = this.quizDAO.findAll();
+        List<Quiz> quizzes = this.quizDAO.findAllByCreatedBy_Id(userId);
         if (quizzes.isEmpty()) {
-            return new ErrorDataResult<>("Cannot find quiz");
+            return new ErrorDataResult<>("Cannot find quiz with given userId: "+userId);
         }
 
         List<QuizResponseDTO> response = quizzes
@@ -112,7 +114,38 @@ public class QuizManager implements QuizService {
             return new ErrorResult("Cannot find question with given questionId: " + questionId);
         }
 
-        simpMessagingTemplate.convertAndSend("/topic/rt-quiz-client/" + question.getQuiz().getId(), question.getTitle());
+        QuestionDTO response = new QuestionDTO(
+                question.getId(),
+                question.getTitle()
+        );
+        simpMessagingTemplate.convertAndSend("/topic/rt-quiz-client/" + question.getQuiz().getId(), response);
         return new SuccessResult("Successfully sent.");
     }
+
+    @Override
+    public Result receiveAnswer(UserAnswerDTO userAnswerDTO) {
+
+        if (userAnswerDTO.getAnswer() == null) {
+            return null;
+        }
+
+        CorrectAnswer correctAnswer = this.correctAnswerDAO.findCorrectAnswerByAnswerTo_Id(userAnswerDTO.getQuestionId());
+        if (correctAnswer == null) {
+            return new ErrorResult("Cannot find correct answer with given question id: " + userAnswerDTO.getQuestionId());
+        }
+
+        if (correctAnswer.getAnswer().trim().equalsIgnoreCase(userAnswerDTO.getAnswer().trim())){
+
+            System.out.println("DUZ TAPDI KIMSE");
+            User user = this.userDAO.findById(userAnswerDTO.getUserId()).orElse(null);
+            if (user == null) {
+                return new ErrorResult("Cannot find user with given userId: "+userAnswerDTO.getUserId());
+            }
+
+            simpMessagingTemplate.convertAndSend("/topic/rt-quiz-correct-answerers/"+userAnswerDTO.getQuestionId(), user.getUsername());
+        }
+
+        return null;
+    }
+
 }

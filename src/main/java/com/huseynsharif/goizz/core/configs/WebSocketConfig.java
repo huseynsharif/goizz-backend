@@ -17,8 +17,9 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
-
-        registry.enableSimpleBroker("/topic/rt-quiz-client");
+        registry.enableSimpleBroker(
+                "/topic/rt-quiz-client",
+                "/topic/rt-quiz-correct-answerers/");
 
     }
 }

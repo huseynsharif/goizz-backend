@@ -59,8 +59,6 @@ public class QuestionManager implements QuestionService {
         if (questions.isEmpty()){
             return new ErrorDataResult<>("Cannot find question with given id: " + quizId);
         }
-
-
         return new SuccessDataResult<>(questions, "Successfully listed.");
     }
 }
