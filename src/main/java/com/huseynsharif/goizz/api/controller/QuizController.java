@@ -39,6 +39,11 @@ public class QuizController {
         return questionId;
     }
 
+    @MessageMapping("/finish-quiz")
+    public int finishQuiz(@Payload int quizId){
+        this.quizService.finishQuiz(quizId);
+        return quizId;
+    }
     @PostMapping("/receive-answer")
     public ResponseEntity<?> receiveAnswer(@RequestBody UserAnswerDTO userAnswerDTO){
         return ResponseEntity.ok(this.quizService.receiveAnswer(userAnswerDTO));

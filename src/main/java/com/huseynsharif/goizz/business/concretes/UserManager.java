@@ -71,7 +71,7 @@ public class UserManager implements UserService {
 
     private String verificationLinkGenerator(int userId, String token) {
 
-        return "http://localhost:3000/verify-email-with-link/" + userId + "/" + token;
+        return "http://192.198.0.103:3000/verify-email-with-link/" + userId + "/" + token;
     }
 
     @Override
@@ -141,7 +141,7 @@ public class UserManager implements UserService {
     }
 
     private String restorePasswordLinkGenerator(int userId, String token) {
-        return "http://localhost:3000/new-password/" + userId + "/" + token;
+        return "http://192.198.0.103:3000/new-password/" + userId + "/" + token;
     }
 
     @Override

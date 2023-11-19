@@ -124,7 +124,6 @@ public class QuizManager implements QuizService {
 
     @Override
     public Result receiveAnswer(UserAnswerDTO userAnswerDTO) {
-
         if (userAnswerDTO.getAnswer() == null) {
             return null;
         }
@@ -135,8 +134,6 @@ public class QuizManager implements QuizService {
         }
 
         if (correctAnswer.getAnswer().trim().equalsIgnoreCase(userAnswerDTO.getAnswer().trim())){
-
-            System.out.println("DUZ TAPDI KIMSE");
             User user = this.userDAO.findById(userAnswerDTO.getUserId()).orElse(null);
             if (user == null) {
                 return new ErrorResult("Cannot find user with given userId: "+userAnswerDTO.getUserId());
@@ -146,6 +143,15 @@ public class QuizManager implements QuizService {
         }
 
         return null;
+    }
+
+    @Override
+    public Result finishQuiz(int quizId) {
+
+        simpMessagingTemplate.convertAndSend("/topic/rt-quiz-finish/"+quizId, quizId);
+
+
+        return new SuccessResult("Successfully finished.");
     }
 
 }

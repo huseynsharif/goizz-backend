@@ -21,4 +21,6 @@ public interface QuizService {
 
     Result receiveAnswer(UserAnswerDTO userAnswerDTO);
 
+    Result finishQuiz(int quizId);
+
 }

@@ -13,13 +13,16 @@ public class WebSocketConfig implements WebSocketMessageBrokerConfigurer {
     @Override
     public void registerStompEndpoints(StompEndpointRegistry registry) {
         registry.addEndpoint("/rt-quiz").setAllowedOriginPatterns("*");
+        registry.addEndpoint("/finish-quiz").setAllowedOriginPatterns("*");
     }
 
     @Override
     public void configureMessageBroker(MessageBrokerRegistry registry) {
         registry.enableSimpleBroker(
                 "/topic/rt-quiz-client",
-                "/topic/rt-quiz-correct-answerers/");
+                "/topic/rt-quiz-correct-answerers/",
+                "/topic/rt-quiz-finish/"
+        );
 
     }
 }
